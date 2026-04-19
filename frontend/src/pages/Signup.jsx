@@ -1,8 +1,11 @@
 import Navbar from "../components/Navbar";
 import axios from "axios";
 import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 
 function Signup() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -21,14 +24,23 @@ function Signup() {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/auth/signup",
+        "https://farmer-help-portal-backend.onrender.com/api/auth/signup",
         formData
       );
 
       alert(res.data.message);
-      console.log(formData);
+
+      setFormData({
+        name: "",
+        email: "",
+        password: "",
+      });
+
+      navigate("/login");
     } catch (error) {
       console.log(error);
+
+      alert(error.response?.data?.message || "Signup failed");
     }
   };
 
@@ -36,60 +48,114 @@ function Signup() {
     <div>
       <Navbar />
 
-      <h1 style={{ textAlign: "center", marginTop: "50px" }}>
-        Signup Page
-      </h1>
-
-      <form
-        onSubmit={handleSignup}
+      <div
         style={{
-          width: "300px",
-          margin: "30px auto",
-          display: "flex",
-          flexDirection: "column",
-          gap: "15px",
+          maxWidth: "400px",
+          margin: "50px auto",
+          padding: "30px",
+          borderRadius: "12px",
+          backgroundColor: "#f9f9f9",
+          boxShadow: "0 0 10px rgba(0,0,0,0.1)",
         }}
       >
-        <input
-          type="text"
-          name="name"
-          placeholder="Enter Name"
-          value={formData.name}
-          onChange={handleChange}
-          style={{ padding: "10px" }}
-        />
-
-        <input
-          type="email"
-          name="email"
-          placeholder="Enter Email"
-          value={formData.email}
-          onChange={handleChange}
-          style={{ padding: "10px" }}
-        />
-
-        <input
-          type="password"
-          name="password"
-          placeholder="Enter Password"
-          value={formData.password}
-          onChange={handleChange}
-          style={{ padding: "10px" }}
-        />
-
-        <button
-          type="submit"
+        <h1
           style={{
-            padding: "10px",
-            backgroundColor: "green",
-            color: "white",
-            border: "none",
-            cursor: "pointer",
+            textAlign: "center",
+            color: "green",
+            marginBottom: "25px",
           }}
         >
           Signup
-        </button>
-      </form>
+        </h1>
+
+        <form
+          onSubmit={handleSignup}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "15px",
+          }}
+        >
+          <input
+            type="text"
+            name="name"
+            placeholder="Enter Name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+            style={{
+              padding: "12px",
+              borderRadius: "6px",
+              border: "1px solid #ccc",
+              fontSize: "16px",
+            }}
+          />
+
+          <input
+            type="email"
+            name="email"
+            placeholder="Enter Email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            style={{
+              padding: "12px",
+              borderRadius: "6px",
+              border: "1px solid #ccc",
+              fontSize: "16px",
+            }}
+          />
+
+          <input
+            type="password"
+            name="password"
+            placeholder="Enter Password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+            style={{
+              padding: "12px",
+              borderRadius: "6px",
+              border: "1px solid #ccc",
+              fontSize: "16px",
+            }}
+          />
+
+          <button
+            type="submit"
+            style={{
+              padding: "12px",
+              backgroundColor: "green",
+              color: "white",
+              border: "none",
+              borderRadius: "6px",
+              fontSize: "16px",
+              cursor: "pointer",
+            }}
+          >
+            Signup
+          </button>
+        </form>
+
+        <p
+          style={{
+            textAlign: "center",
+            marginTop: "20px",
+          }}
+        >
+          Already have an account?{" "}
+          <Link
+            to="/login"
+            style={{
+              color: "green",
+              textDecoration: "none",
+              fontWeight: "bold",
+            }}
+          >
+            Login
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }
